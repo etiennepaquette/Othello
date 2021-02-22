@@ -7,12 +7,11 @@ public class GameController : MonoBehaviour
 {
     private const int Dimension = 8;
 
-    // 0 = Empty, 1 = White, 2 = Black
     private Cell[,] Board = new Cell[Dimension, Dimension];
-    public GameObject prefDisc;
-    private bool blackTurn = true;
+    private bool blackTurn;
 
-    // Start is called before the first frame update
+    public GameObject prefDisc;
+
     void Start()
     {
         // Init
@@ -23,6 +22,8 @@ public class GameController : MonoBehaviour
                 Board[x, y] = new Cell();
             }
         }
+
+        blackTurn = true;
 
         // Starter pieces
         PlacePiece(3, 3, "Black");
@@ -43,7 +44,6 @@ public class GameController : MonoBehaviour
         blackTurn = !blackTurn;
     }   
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) 
@@ -64,6 +64,11 @@ public class GameController : MonoBehaviour
         bool valid = false;
         string color = blackTurn ? "Black" : "White";
 
+        // Out of bound verification
+        if (posX < 0 || posX >= Dimension || posY < 0 || posY >= Dimension)
+            return false;
+
+        // If there's already a piece where we clicked
         if (Board[posX, posY].transform != null)
             return false;
 
